@@ -20,6 +20,13 @@ class WebServerTest < Minitest::Test
     super
   end
 
+  def setup
+    # before each test, pause for a second to give the
+    # web server time to close the connection from the 
+    # prior request
+    sleep(1)
+  end
+
   def test_index_html
     res = Net::HTTP.get(URL, '/index.html', PORT)
     res = res.split.join(' ')
@@ -48,11 +55,11 @@ class WebServerTest < Minitest::Test
     res = Net::HTTP.get(URL, '/signup.html', PORT)
     res = res.split.join(' ')
     assert(res.match(/<option value="Cars">Cars and Trucks<\/option>/))
-    assert(res.match(/<option value="Appliances">Kitchen and Laundry Applicances<\/option>/))
+    assert(res.match(/<option value="Appliances">Kitchen and Laundry Appliances<\/option>/))
     assert(res.match(/<option value="Tools">Tools, e.g. saws, anvils, hammers/))
     assert(res.match(/<option value="70's Music">Music of the 1970's<\/option>/))
     assert(res.match(/<option value="Other">Other Stuff<\/option>/))
-    assert(res.match(/<select name="interests" size="1">/))
+    assert(res.match(/<select name="interests" size="1"/))
 
     # general HTML correctness
     assert(general_html_goodness(res))
